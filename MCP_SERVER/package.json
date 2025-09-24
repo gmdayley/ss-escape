@@ -1,0 +1,25 @@
+{
+  "name": "space-station-escape",
+  "version": "1.0.0",
+  "description": "A 60-minute MCP escape room challenge teaching Claude Code features through a space station emergency scenario",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "npx tsx watch src/index.ts",
+    "regenerate-data": "node regenerate-challenge-data.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.0",
+    "express": "^5.1.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

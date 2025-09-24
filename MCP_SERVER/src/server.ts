@@ -7,7 +7,7 @@ import crypto from "crypto";
 
 export function getServer(): McpServer {
   const server = new McpServer({
-    name: "space-station-escape",
+    name: "space-station-escape-tools",
     version: "1.0.0",
   });
 
@@ -122,76 +122,75 @@ export function getServer(): McpServer {
     }
   );
 
-  // Register emergency_access tool
-  server.registerTool(
-    "emergency_access",
-    {
-      description: "Emergency access validation tool for station override",
-      inputSchema: {
-        type: "object",
-        properties: {
-          location: {
-            type: "string",
-            description: "The emergency access location",
-          },
-          accessCode: {
-            type: "string",
-            description: "The emergency access code",
-          },
-        },
-        required: ["location", "accessCode"],
-      },
-    },
-    async (args) => {
-      const { location, accessCode } = args as {
-        location: string;
-        accessCode: string;
-      };
+  // // Register emergency_access tool
+  // server.registerTool(
+  //   "emergency_access",
+  //   {
+  //     description: "Emergency access validation tool for station override",
+  //     inputSchema: {
+  //       type: "object",
+  //       properties: {
+  //         location: {
+  //           type: "string",
+  //           description: "The emergency access location",
+  //         },
+  //         accessCode: {
+  //           type: "string",
+  //           description: "The emergency access code",
+  //         },
+  //       },
+  //       required: ["location", "accessCode"],
+  //     },
+  //   },
+  //   async (args) => {
+  //     const { location, accessCode } = args as {
+  //       location: string;
+  //       accessCode: string;
+  //     };
 
-      try {
-        // Generate the hash that would be used for validation
-        const combinedInput = `${location}|${accessCode}`;
-        const hash = crypto
-          .createHash("sha256")
-          .update(combinedInput)
-          .digest("hex");
+  //     try {
+  //       // Generate the hash that would be used for validation
+  //       const combinedInput = `${location}|${accessCode}`;
+  //       const hash = crypto
+  //         .createHash("sha256")
+  //         .update(combinedInput)
+  //         .digest("hex");
 
-        return {
-          content: [
-            {
-              type: "text",
-              text: `🚨 Emergency Access Hash Generated\nLocation: ${location}\nAccess Code: ${accessCode}\nCombined: ${combinedInput}\nSHA256 Hash: ${hash}\n\n⚠️  Use this hash with the /station-override command to restore station control!`,
-            },
-          ],
-        };
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
-        return {
-          content: [
-            {
-              type: "text",
-              text: `❌ Error: ${errorMessage}`,
-            },
-          ],
-          isError: true,
-        };
-      }
-    }
-  );
+  //       return {
+  //         content: [
+  //           {
+  //             type: "text",
+  //             text: `🚨 Emergency Access Hash Generated\nLocation: ${location}\nAccess Code: ${accessCode}\nCombined: ${combinedInput}\nSHA256 Hash: ${hash}\n\n⚠️  Use this hash with the /station-override command to restore station control!`,
+  //           },
+  //         ],
+  //       };
+  //     } catch (error) {
+  //       const errorMessage =
+  //         error instanceof Error ? error.message : String(error);
+  //       return {
+  //         content: [
+  //           {
+  //             type: "text",
+  //             text: `❌ Error: ${errorMessage}`,
+  //           },
+  //         ],
+  //         isError: true,
+  //       };
+  //     }
+  //   }
+  // );
 
   // Register station-override prompt
   server.registerPrompt(
     "station-override",
     {
-      description: "Emergency station override validation system",
-      arguments: [
-        {
-          name: "hash",
-          description: "SHA256 hash for emergency access validation",
-          required: true,
-        },
-      ],
+      title: "Emergency_Station_Override",
+      description: "Emergency station override system",
+      argsSchema: {
+        hash: z
+          .string()
+          .describe("The SHA256 hash for emergency access validation"),
+      },
     },
     async (args) => {
       const hash = args?.hash as string;
